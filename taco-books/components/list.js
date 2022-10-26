@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, Button, CardHeader, Grid, IconButton, Input, ToggleButton, Typography } from '@mui/material'; 
+import { Card, CardContent, Button, CardHeader, Grid, IconButton, Input, ToggleButton, Typography, Box } from '@mui/material'; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -55,8 +55,8 @@ export default class extends React.Component {
         }
         
         return (
-            <div >
-                <Card sx={{ width: 350, minHeight: '100%', overflowY: 'auto', mr: '20px'}} variant="outlined">
+            <Box>
+                <Card sx={{ width: {md: 350, xs: '100%'}, minHeight: '100%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
                     <CardHeader sx={{ backgroundColor: 'secondary1.main' }} title={
                         <Grid container
                             direction="row"
@@ -90,7 +90,7 @@ export default class extends React.Component {
                         )}
                     </CardContent>
                 </Card>
-            </div>
+            </Box>
         );
     }
 }
