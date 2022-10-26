@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Header from '../components/header.js';
 import BookList from '../components/list.js';
-import { ThemeProvider, Button, Box, FormControl, InputLabel, NativeSelect } from "@mui/material";
+import { ThemeProvider, Button, Box, FormControl, NativeSelect, Grid } from "@mui/material";
 import { appTheme } from "../theme";
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import { v4 as uuidv4 } from 'uuid';
+import Search from '../components/searchBooks'
 
 export default class extends React.Component {
   constructor(props) {
@@ -12,12 +13,13 @@ export default class extends React.Component {
     this.state = {
       lists: [],
       shelf: 10,
+      display: false,
     };
 
     // functions
     this.addList = this.addList.bind(this);
     this.deleteCurrent = this.deleteCurrent.bind(this);
-    this.handleShelf = this.handleShelf.bind(this);
+    this.displaySearch = this.displaySearch.bind(this);
   }
 
   addList(){
@@ -32,43 +34,31 @@ export default class extends React.Component {
     }));
   }
 
-  handleShelf(selectedShelf){
-    this.setState(() => ({
-      shelf: selectedShelf
-    }));
+  displaySearch(){
+    this.setState(prevState=>({display: !prevState.display}))
   }
-
   render () {
     return (
       <ThemeProvider theme={appTheme}>
-        <Box sx={{height: '100vh', backgroundColor: 'background.main'}}>
-          <Header/>
-          <Box sx={{display: 'flex', flexFlow: 'column', height: {xs: 'calc(100% - 165px)', md: '100%'}, py: 2}}>
-            <FormControl sx={{ml: '20px', mt: '20px', width: '200px', color: 'white'}}>
-              <NativeSelect
-                sx={{ backgroundColor: 'white', p: 1}}
-                defaultValue={10}
-                label='shelf'
-                inputProps={{
-                  name: 'shelf',
-                  id: 'uncontrolled-native',
-                }}
-              >
-                <option value={10}>Ten</option>
-                <option value={20}>Twenty</option>
-                <option value={30}>Thirty</option>
-              </NativeSelect>
-            </FormControl>
+        <Box sx={{minHeight: '100vh', backgroundColor: 'background.main'}}>
+          <Grid container spacing={2} sx={{minHeight: '100vh'}}>
             
+            <Grid item xs={12} md={2} sx={{height: {xs: '15px', md: 'auto'}}}><Header toggleSearch={this.displaySearch}/></Grid>
 
-            <Box sx={{pt: '20px', overflowX: 'auto', maxWidth: '100vw', display: 'flex', flex: '1'}}>
-              {this.state.lists.map((list) =>
-                <BookList key={list.id}
-                          deleteList={()=>this.deleteCurrent(list.id)}/>
-              )}
-              <Button sx={{ml: '20px'}} variant="contained" color="secondary2" onClick={this.addList}><ControlPointIcon/></Button>
-            </Box>
-          </Box>
+            {this.state.display ? <Grid item xs={12} md={2}><Search/></Grid> : null}
+
+            <Grid item md={ this.state.display ? 8 : 10}>
+              <Box sx={{height: '100%'}}>
+                <Box sx={{py: '20px', overflowX: 'auto', maxWidth: '100vw', display: 'flex', flex: '1', height: '100%'}}>
+                  {this.state.lists.map((list) =>
+                    <BookList key={list.id}
+                              deleteList={()=>this.deleteCurrent(list.id)}/>
+                  )}
+                  <Button sx={{mr: '20px', ml: {xs: '10px', md: 0}}} variant="contained" color="secondary2" onClick={this.addList}><ControlPointIcon/></Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
 
         <style jsx>{`

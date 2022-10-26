@@ -55,8 +55,8 @@ export default class extends React.Component {
         }
         
         return (
-            <div>
-                <Card sx={{ width: 350, height: '100%', ml: '20px', overflowY: 'auto'}} variant="outlined">
+            <div >
+                <Card sx={{ width: 350, minHeight: '100%', overflowY: 'auto', mr: '20px'}} variant="outlined">
                     <CardHeader sx={{ backgroundColor: 'secondary1.main' }} title={
                         <Grid container
                             direction="row"
