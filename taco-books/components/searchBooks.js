@@ -1,36 +1,45 @@
 import * as React from 'react';
-import { Container, Typography } from '@mui/material'; 
+import { Container, Box, TextField } from '@mui/material'; 
+import Book from './book'
 
 export default class extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            foundBooks: []
         };
+        this.handleSearch = this.handleSearch.bind(this)
     }
-    render(){
-        
+
+    handleSearch(e){
+        console.log(e.target.value)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${e.target.value}`)
+        .then((response)=>{
+            return response.json()
+        })
+        .then((json)=>{
+            this.props.updateFound(json.items)
+            console.log(json.items)
+        })
+    }
+
+    render(){    
         return (
             <div className='parent'>
-                <Container sx={{height: '100%', width: '100%', backgroundColor: 'white'}}>
-                    <Typography>Test</Typography>
+                <Container sx={{height: '100%', width: '100%', backgroundColor: 'white', alignItems: 'center', overflowY: 'auto  '}}>
+                    <TextField type="search" autoFocus label="Search Books" sx={{ width: '100%', mt: 2}} onChange={this.handleSearch}/>
+                    {this.props.foundBooks.map((book)=>
+                        <Book 
+                            key={book.id} 
+                            noDelete 
+                            title={book.volumeInfo.title}></Book>
+                    )}
                 </Container>
-
                 <style jsx>{`
                     .parent{
-                        height: 100%;
+                        height: 100vh;
                         background-color: white;
                     }
-                    .slideIn {
-                        animation: 1s ease-out 0s 1 slideInFromLeft;
-                    }
-                    @keyframes slideInFromLeft {
-                        0% {
-                          transform: translateX(-100%);
-                        }
-                        100% {
-                          transform: translateX(0);
-                        }
-                      }
                 `}</style>
             </div>
         );

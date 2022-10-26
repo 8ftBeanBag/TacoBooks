@@ -9,13 +9,13 @@ import BookList from '../components/list.js';
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function MobileLayout({lists, display, updateLists, displaySearch}) {
+export default function MobileLayout({lists, display, updateLists, displaySearch, foundBooks, updateFound}) {
     return (
         <Box container spacing={2} sx={{minHeight: '100vh', p: 2}}>
           
             <Header toggleSearch={()=>displaySearch(!display)}/>
 
-            {display ? <Search/> : null}
+            {display ? <Search foundBooks={foundBooks} updateFound={updateFound}/> : null}
 
             <Button sx={{ width: '100%', mt: 2}} variant="contained" color="secondary2" onClick={()=>updateLists(lists.concat([{id: uuidv4()}]))}><ControlPointIcon/></Button>
             {lists.map((list) =>

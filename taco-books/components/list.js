@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, Button, CardHeader, Grid, IconButton, Input, ToggleButton, Typography, Box } from '@mui/material'; 
+import { Card, CardContent, Button, CardHeader, Grid, IconButton, TextField, ToggleButton, Typography, Box } from '@mui/material'; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -49,7 +49,12 @@ export default class extends React.Component {
     render(){
         let title;
         if (this.state.edit) {
-            title = <Input value={this.state.name} onChange={this.handleName}></Input>
+            title = <TextField value={this.state.title} onChange={this.setTitle} onKeyDown={(e)=>{
+                if(e.key == "Enter"){
+                    this.setEditTitle()
+                }
+            }}
+            variant="standard" fullWidth></TextField>
         } else {
             title = <Typography noWrap sx={{width: "155px", display: "inline-block"}}>{this.state.name}</Typography>
         }
@@ -63,8 +68,10 @@ export default class extends React.Component {
                             justifyContent="space-between"
                             alignItems="center"
                             spacing={2}>
-                            <Grid item>
+                            <Grid item xs={this.props.noDelete ? 10 : 8}>
                                 {title}
+                            </Grid>
+                            <Grid item xs={2}>
                                 <ToggleButton
                                 sx={{ml: 2}}
                                 value="check"
@@ -76,11 +83,13 @@ export default class extends React.Component {
                                     <EditIcon />
                                 </ToggleButton>
                             </Grid>
-                            <Grid item>
-                                <IconButton aria-label="delete" color="primary" onClick={this.deleteMe}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Grid>
+                            {this.props.noDelete ? null :
+                                <Grid item xs={2}>
+                                    <IconButton aria-label="delete" color="primary" onClick={this.deleteMe}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+                            }
                         </Grid>
                     }/>
                     <CardContent sx={{p: 1}}>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, CardContent, CardHeader, Grid, IconButton, Input, ToggleButton, Typography } from '@mui/material'; 
+import { Card, CardContent, CardHeader, Grid, IconButton, TextField, ToggleButton, Typography } from '@mui/material'; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -8,9 +8,8 @@ export default class extends React.Component {
         super(props);
         this.state = {
             editTitle: true,
-            title: '',
-            read: '',
-            description: 'description',
+            title: this.props.title,
+            description: this.props.description,
         };
         this.setTitle = this.setTitle.bind(this);
         this.setRead = this.setRead.bind(this);
@@ -19,7 +18,7 @@ export default class extends React.Component {
         this.setEditTitle = this.setEditTitle.bind(this);
     }
 
-    setEditTitle(prevState){
+    setEditTitle(){
         this.setState(prevState => ({editTitle: !prevState.editTitle}))
     }
     setTitle(event) {
@@ -38,9 +37,14 @@ export default class extends React.Component {
     render(){
         let title;
         if (this.state.editTitle) {
-            title = <Input value={this.state.title} onChange={this.setTitle}></Input>
+            title = <TextField value={this.state.title} onChange={this.setTitle} onKeyDown={(e)=>{
+                if(e.key == "Enter"){
+                    this.setEditTitle()
+                }
+            }}
+            variant="standard" fullWidth></TextField>
         } else {
-            title = <Typography noWrap sx={{width: "155px", display: "inline-block"}}>{this.state.title}</Typography>
+            title = <Typography noWrap sx={{width: "100%", display: "inline-block"}}>{this.state.title}</Typography>
         }
         
         return (
@@ -52,8 +56,10 @@ export default class extends React.Component {
                             justifyContent="space-between"
                             alignItems="center"
                             spacing={2}>
-                            <Grid item>
+                            <Grid item xs={this.props.noDelete ? 10 : 8}>
                                 {title}
+                            </Grid>
+                            <Grid item xs={2}>
                                 <ToggleButton
                                 sx={{ml: 1}}
                                 value="check"
@@ -65,11 +71,13 @@ export default class extends React.Component {
                                     <EditIcon />
                                 </ToggleButton>
                             </Grid>
-                            <Grid item>
-                                <IconButton aria-label="delete" color="primary" onClick={this.deleteMe}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Grid>
+                            {this.props.noDelete ? null :
+                                <Grid item xs={2}>
+                                    <IconButton aria-label="delete" color="primary" onClick={this.deleteMe}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+                            }
                         </Grid>
                     }/>
                     <CardContent sx={{overflowY: 'scroll'}}>
