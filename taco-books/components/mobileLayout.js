@@ -1,6 +1,4 @@
 import React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
 import { Button, Box, Grid } from "@mui/material";
 import Search from '../components/searchBooks'
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -17,10 +15,14 @@ export default function MobileLayout({lists, display, updateLists, displaySearch
 
             {display ? <Search foundBooks={foundBooks} updateFound={updateFound}/> : null}
 
-            <Button sx={{ width: '100%', mt: 2}} variant="contained" color="secondary2" onClick={()=>updateLists(lists.concat([{id: uuidv4()}]))}><ControlPointIcon/></Button>
+            <Button sx={{ width: '100%', mt: 2}} variant="contained" color="secondary2" onClick={()=>updateLists(lists.concat([{id: uuidv4(), cards: []}]))}><ControlPointIcon/></Button>
             {lists.map((list) =>
-            <BookList key={list.id}
-                      deleteList={()=>updateLists(lists.filter(i=>i.id!=list.id))}/>
+            <BookList 
+                deleteList={()=>updateLists(lists.filter(i=>i.id!=list.id))}
+                title={list.title}
+                updateCards={(cards)=>updateCards(cards, list.id)}
+                cards={list.cards}
+                />
             )}
         </Box>
     )

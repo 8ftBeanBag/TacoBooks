@@ -7,6 +7,12 @@ import BookList from '../components/list.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function MainLayout({lists, display, updateLists, displaySearch, foundBooks, updateFound}) {
+    const updateCards = (cards, listId)=>{
+        let list = lists.find(l=>l.id == listId);
+        list.cards = cards;
+        lists[lists.findIndex(l=>l.id==listId)] = list
+        updateLists(lists)
+    }
     return (
         <Grid container spacing={2} sx={{minHeight: '100vh'}}>
           
@@ -20,10 +26,11 @@ export default function MainLayout({lists, display, updateLists, displaySearch, 
                         {lists.map((list) =>
                         <BookList key={list.id}
                                   deleteList={()=>updateLists(lists.filter(i=>i.id!=list.id))}
-                                  title=""
-                                  description=""/>
+                                  title={list.title}
+                                  updateCards={(cards)=>updateCards(cards, list.id)}
+                                  cards={list.cards}/>
                         )}
-                        <Button sx={{mr: '20px', ml: {xs: '10px', md: 0}}} variant="contained" color="secondary2" onClick={()=>updateLists(lists.concat([{id: uuidv4()}]))}><ControlPointIcon/></Button>
+                        <Button sx={{mr: '20px', ml: {xs: '10px', md: 0}}} variant="contained" color="secondary2" onClick={()=>updateLists(lists.concat([{id: uuidv4(), cards: []}]))}><ControlPointIcon/></Button>
                     </Box>
                 </Box>
             </Grid>

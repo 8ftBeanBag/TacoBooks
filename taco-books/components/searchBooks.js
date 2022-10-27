@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Container, Box, TextField } from '@mui/material'; 
 import Book from './book'
+import { BookOnline } from '@mui/icons-material';
 
 export default class extends React.Component {
     constructor(props) {
@@ -31,8 +32,9 @@ export default class extends React.Component {
                     {this.props.foundBooks.map((book)=>
                         <Book 
                             key={book.id} 
-                            noDelete 
-                            title={book.volumeInfo.title}></Book>
+                            noEdit 
+                            initTitle={book.volumeInfo.title}
+                            initDescription={book.volumeInfo.description}></Book>
                     )}
                 </Container>
                 <style jsx>{`

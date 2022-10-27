@@ -2,89 +2,69 @@ import * as React from 'react';
 import { Card, CardContent, CardHeader, Grid, IconButton, TextField, ToggleButton, Typography } from '@mui/material'; 
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { horizontalDrag } from './DnD';
+import { useState } from 'react';
 
-export default class extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            editTitle: true,
-            title: this.props.title,
-            description: this.props.description,
-        };
-        this.setTitle = this.setTitle.bind(this);
-        this.setRead = this.setRead.bind(this);
-        this.setDescription = this.setDescription.bind(this);
-        this.deleteMe = this.deleteMe.bind(this);
-        this.setEditTitle = this.setEditTitle.bind(this);
-    }
+export default function Book({initTitle, initDescription, deleteBook, index, id, noEdit=false, moveCard}){
+    // State
+    const [editTitle, setEditTitle] = useState(false)
+    const [bookTitle, setTitle] = useState(initTitle)
+    const [description, setDescription] = useState(initDescription)
 
-    setEditTitle(){
-        this.setState(prevState => ({editTitle: !prevState.editTitle}))
-    }
-    setTitle(event) {
-        this.setState({title: event.target.value});
-    }
-    setRead() {
-        this.setState(prevState=>({read: !prevState.read}))
-    }
-    setDescription(newDescription){
-        this.setState({description: newDescription});
-    }
-    deleteMe(){
-        this.props.deleteBook()
-    }
+    // Drag data
+    let dragData = horizontalDrag(id, index, moveCard);
 
-    render(){
-        let title;
-        if (this.state.editTitle) {
-            title = <TextField value={this.state.title} onChange={this.setTitle} onKeyDown={(e)=>{
-                if(e.key == "Enter"){
-                    this.setEditTitle()
-                }
-            }}
-            variant="standard" fullWidth></TextField>
-        } else {
-            title = <Typography noWrap sx={{width: "100%", display: "inline-block"}}>{this.state.title}</Typography>
-        }
-        
-        return (
-            <div>
-                <Card sx={{ width: '100%', maxHeight: '600px', overflowY: 'auto', my: 2}} variant="outlined">
-                    <CardHeader sx={{ backgroundColor: "secondary2.main" }} title={
-                        <Grid container
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            spacing={2}>
-                            <Grid item xs={this.props.noDelete ? 10 : 8}>
-                                {title}
-                            </Grid>
+    return (
+        <div ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}}>
+            <Card sx={{ width: '100%', maxHeight: '600px', overflowY: 'auto', my: 2}} variant="outlined">
+                <CardHeader sx={{ backgroundColor: "secondary2.main" }} title={
+                    <Grid container
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        spacing={2}>
+                        <Grid item xs={noEdit ? 10 : 8}>
+                            {
+                                editTitle ? 
+                                <TextField value={bookTitle} onChange={(e)=>setTitle(e.target.value)} onKeyDown={(e)=>{
+                                    if(e.key == "Enter"){
+                                        setEditTitle()
+                                    }
+                                }}
+                                variant="standard" fullWidth></TextField>
+                                : <Typography noWrap sx={{width: "100%", display: "inline-block"}}>{bookTitle}</Typography>
+                            }
+                        </Grid>
+                        {noEdit ? null : 
                             <Grid item xs={2}>
                                 <ToggleButton
                                 sx={{ml: 1}}
                                 value="check"
-                                selected={this.state.editTitle}
-                                onChange={this.setEditTitle}
+                                selected={editTitle}
+                                onChange={()=>setEditTitle(!editTitle)}
                                 size='small'
                                 color='primary'
                                 >
                                     <EditIcon />
                                 </ToggleButton>
                             </Grid>
-                            {this.props.noDelete ? null :
-                                <Grid item xs={2}>
-                                    <IconButton aria-label="delete" color="primary" onClick={this.deleteMe}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Grid>
-                            }
-                        </Grid>
-                    }/>
-                    <CardContent sx={{overflowY: 'scroll'}}>
-                        {this.state.description}
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
+                        }
+                        {noEdit ? null :
+                            <Grid item xs={2}>
+                                <IconButton aria-label="delete" color="primary" onClick={()=>deleteBook()}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Grid>
+                        }
+                    </Grid>
+                }/>
+                <CardContent sx={{overflowY: 'auto'}}>
+                    {editTitle ? 
+                        <TextField multiline value={description} fullWidth onChange={(e)=>setDescription(e.target.value)}></TextField>
+                        : description
+                    }
+                </CardContent>
+            </Card>
+        </div>
+    );
 }
