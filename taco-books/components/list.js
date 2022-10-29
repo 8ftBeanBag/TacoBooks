@@ -7,26 +7,22 @@ import { v4 as uuidv4 } from 'uuid';
 import Book from "./book"
 import { useCallback, useState } from 'react'
 import update from 'immutability-helper'
-import { dropTarget } from './DnD';
+import { dropTarget, verticalDrag } from './DnD';
+import { useStore } from '../stores/lists';
 
-export default function BookList({deleteList, updateCards, cards, title}){
+export default function BookList({deleteList, cards, title, id, index}){
     const [edit, handleEdit] = useState(false)
     const [name, handleName] = useState(title)
-
-    const moveCard = useCallback((dragIndex, hoverIndex) => {
-        handleCards((prevCards) =>
-            update(prevCards, {
-            $splice: [
-                [dragIndex, 1],
-                [hoverIndex, 0, prevCards[dragIndex]],
-            ],
-            }),
-        )
-    }, [])
-    let dropRef = dropTarget(() => moveCard(0, 0))
+    const addCard = useStore((state) => state.addCard)
+    const deleteCard = useStore((state) => state.deleteCard)
+    
+    // Drag data
+    const moveList = useStore((state) => state.moveList)
+    let dragData = verticalDrag(id, index, moveList);
+    
     return (
-        <Box ref={dropRef}>
-            <Card sx={{ width: {md: 350, xs: '100%'}, minHeight: '100%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
+        <Box ref={dragData.ref} >
+            <Card sx={{ width: {md: 350, xs: '100%'}, maxHeight: '100%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
                 <CardHeader sx={{ backgroundColor: 'secondary1.main' }} title={
                     <Grid container
                         direction="row"
@@ -65,9 +61,9 @@ export default function BookList({deleteList, updateCards, cards, title}){
                     </Grid>
                 }/>
                 <CardContent sx={{p: 1}}>
-                    <Button sx={{ width: '100%'}} variant="contained" color="primary" onClick={()=>updateCards(cards.concat([{id: uuidv4(), cards: []}]))}><ControlPointIcon/></Button>
+                    <Button sx={{ width: '100%'}} variant="contained" color="primary" onClick={()=>addCard(id)}><ControlPointIcon/></Button>
                     {cards.map((card, idx)=>
-                        <Book key={card.id} moveCard={moveCard} index={idx} id={card.id} initDescription={card.description} initTitle={card.title} deleteBook={()=>updateCards(cards.filter(c=>c.id != card.id))}></Book>
+                        <Book key={card.id} moveCard={()=>moveCard(id, card.id)} index={idx} id={card.id} initDescription={card.description} initTitle={card.title} deleteBook={()=>deleteCard(id, card.id)} listId={id}></Book>
                     )}
                 </CardContent>
             </Card>

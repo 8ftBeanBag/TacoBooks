@@ -4,25 +4,29 @@ import Search from '../components/searchBooks'
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import Header from '../components/header.js';
 import BookList from '../components/list.js';
-import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useStore } from '../stores/lists';
 
 export default function MobileLayout({lists, display, updateLists, displaySearch, foundBooks, updateFound}) {
+    const addList = useStore((state) => state.addList)
+    const deleteList = useStore((state) => state.deleteList)
+
     return (
-        <Box container spacing={2} sx={{minHeight: '100vh', p: 2}}>
+        <Box sx={{minHeight: '100vh', p: 2}}>
           
             <Header toggleSearch={()=>displaySearch(!display)}/>
 
             {display ? <Search foundBooks={foundBooks} updateFound={updateFound}/> : null}
 
-            <Button sx={{ width: '100%', mt: 2}} variant="contained" color="secondary2" onClick={()=>updateLists(lists.concat([{id: uuidv4(), cards: []}]))}><ControlPointIcon/></Button>
-            {lists.map((list) =>
+            <Button sx={{ width: '100%', mt: 2}} variant="contained" color="secondary2" onClick={()=>addList()}><ControlPointIcon/></Button>
+            {lists.map((list, idx) =>
             <BookList 
-                deleteList={()=>updateLists(lists.filter(i=>i.id!=list.id))}
+                key={list.id}
+                deleteList={()=>deleteList(list.id)}
                 title={list.title}
-                updateCards={(cards)=>updateCards(cards, list.id)}
                 cards={list.cards}
-                />
+                id={list.id}
+                index={idx}/>
             )}
         </Box>
     )

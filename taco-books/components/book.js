@@ -4,15 +4,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { horizontalDrag } from './DnD';
 import { useState } from 'react';
+import { useStore } from '../stores/lists';
 
-export default function Book({initTitle, initDescription, deleteBook, index, id, noEdit=false, moveCard}){
+export default function Book({initTitle, initDescription, deleteBook, index, id, noEdit=false, listId}){
     // State
     const [editTitle, setEditTitle] = useState(false)
     const [bookTitle, setTitle] = useState(initTitle)
     const [description, setDescription] = useState(initDescription)
 
     // Drag data
-    let dragData = horizontalDrag(id, index, moveCard);
+    const moveCard = useStore((state) => state.moveCard)
+    let dragData = horizontalDrag(id, index, moveCard, listId);
 
     return (
         <div ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}}>
