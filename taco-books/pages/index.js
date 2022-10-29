@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider, Box } from "@mui/material";
+import { ThemeProvider, Box, Alert, Skeleton, Typography } from "@mui/material";
 import { appTheme } from "../theme";
 import MainLayout from '../components/mainLayout'
 import MobileLayout from '../components/mobileLayout'
@@ -19,38 +19,44 @@ export default function Index() {
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   // state
   const [display, displaySearch] = useState(false)
-  const [foundBooks, updateFound] = useState([])
+  const [alert, setAlert] = useState(true)
+  const foundBooks = useStore((state) => state.foundBooks)
+  const updateFound = useStore((state) => state.updateFound)
   const lists = useStore((state) => state.lists)
-
-  // const moveCard = useCallback((dragIndex, hoverIndex) => {
-  //   updateCards((prevCards)=>{
-  //       update(prevCards, {
-  //           $splice: [
-  //               [dragIndex, 1],
-  //               [hoverIndex, 0, prevCards[dragIndex]]
-  //           ]
-  //       })
-  //   })
-  // }, [])
-
-  // const updateListCards = (listId, cards){
-  //   console.log(listId, cards)
-  // }
 
   return (
     <ThemeProvider theme={appTheme}>
       <DndProvider backend={HTML5Backend}>
         <Box sx={{minHeight: '100vh', backgroundColor: 'background.main', m: 0, overflowY: "auto"}}>
+          { alert ? 
+            <Alert onClose={() => setAlert(false)} variant='filled' severity="warning">Warning: I can't save yet. Your data will be lost on refresh or browser close.</Alert>
+          : null
+          }
           { matches ?
             <MainLayout 
               lists={lists} updateLists={(listId, cards)=>updateListCards(listId, cards)} 
               display={display} displaySearch={(d)=>displaySearch(d)}
               foundBooks={foundBooks} updateFound={(l)=>updateFound(l)}/>
             :
-            <MobileLayout 
-              lists={lists} updateLists={(lists)=>updateLists(lists)}
-              display={display} displaySearch={(d)=>displaySearch(d)}
-              foundBooks={foundBooks} updateFound={(l)=>updateFound(l)}/>
+            <div>
+              <Alert severity="error" variant='filled' >I don't work on mobile yet. I will soon though so come back later!</Alert>
+              <Box
+                sx={{
+                  p: 8,
+                  width: '100%',
+                  height: '100%',
+                }}
+              > 
+                {/* For other variants, adjust the size with `width` and `height` */}
+                <Skeleton variant="rounded" width="100%" height={60} sx={{ mt: 2, bgcolor: 'gray'}} />
+                <Skeleton variant="rounded" width="100%" height={250} sx={{ mt: 2, bgcolor: 'gray'}} />
+                <Skeleton variant="rounded" width="100%" height={60} sx={{ mt: 2, bgcolor: 'gray'}} />
+              </Box>
+            </div>
+            // <MobileLayout 
+            //   lists={lists} updateLists={(lists)=>updateLists(lists)}
+            //   display={display} displaySearch={(d)=>displaySearch(d)}
+            //   foundBooks={foundBooks} updateFound={(l)=>updateFound(l)}/>
           }
         </Box>
       </DndProvider>

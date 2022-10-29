@@ -6,6 +6,10 @@ export const useStore = create((set) => ({
     addList: () => set((state) => ({ lists: state.lists.concat([{id: uuidv4(), cards: []}])})),
     deleteList: (id) => set((state) => ({ lists: state.lists.filter(i=>i.id!=id) })),
     
+    // Search
+    foundBooks: [],
+    updateFound: (newBooks) => set(() => ({ foundBooks: newBooks })),
+
     // Cards
     addCard: (listId) => set((state) => {
         let foundListIdx = state.lists.findIndex(l => l.id == listId)
@@ -31,6 +35,31 @@ export const useStore = create((set) => ({
         let newLists = state.lists
         newLists[dragIndex] = newLists.splice(hoverIndex, 1, newLists[dragIndex])[0]
         return {lists: [...newLists]}
+    }),
+    cardDropped: (toListIdx, cardId) => set((state) => {
+        let fromCardList = state.lists.find(l=>l.cards.map(c=>c.id).includes(cardId))
+
+        // If dragging from search
+        if(fromCardList == undefined){
+            fromCardList = state.foundBooks
+            let cardIdx = fromCardList.findIndex(c=>c.id==cardId)
+            console.log(cardIdx)
+            state.lists[toListIdx].cards.unshift(fromCardList[cardIdx])
+            state.foundBooks.splice(cardIdx, 1)
+            return {lists: [...state.lists]}
+        }
+
+        let fromListIdx = state.lists.findIndex(l=>l.id == fromCardList.id)
+        let cardIdx = fromCardList.cards.findIndex(c=>c.id == cardId)
+
+        // If it's the same list
+        if(fromListIdx === toListIdx)
+            return {lists: [...state.lists]}
+
+        // Else drag is from one list to another.
+        state.lists[toListIdx].cards.unshift(state.lists[fromListIdx].cards[cardIdx])
+        state.lists[fromListIdx].cards.splice(state.lists[toListIdx].cards[cardIdx], 1)
+        return {lists: [...state.lists]}
     }),
 
     // Initial values

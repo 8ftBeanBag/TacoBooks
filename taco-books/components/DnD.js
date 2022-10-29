@@ -101,20 +101,20 @@ export const verticalDrag = (id, index, moveList) => {
       const hoverBoundingRect = ref.current?.getBoundingClientRect()
       // Get horizontal middle
       const hoverMiddleX =
-        (hoverBoundingRect.left - hoverBoundingRect.right) / 2
+        (hoverBoundingRect.left + hoverBoundingRect.right) / 2
       // Determine mouse position
       const clientOffset = monitor.getClientOffset()
       // Get pixels to the left edge
-      const hoverClientX = clientOffset.x - hoverBoundingRect.left
+      const hoverClientX = clientOffset.x + hoverBoundingRect.left
       // Only perform the move when the mouse has crossed half of the items height
       // When dragging downwards, only move when the cursor is below 50%
       // When dragging upwards, only move when the cursor is above 50%
-      // Dragging downwards
+      // Dragging right
       if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
         return
       }
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
+      // Dragging left
+      if (dragIndex > hoverIndex && hoverClientX < hoverMiddleX) {
         return
       }
       // Time to actually perform the action
@@ -127,7 +127,7 @@ export const verticalDrag = (id, index, moveList) => {
     },
   })
   const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.CARD,
+    type: ItemTypes.LIST,
     item: () => {
       return { id, index }
     },
@@ -142,14 +142,19 @@ export const verticalDrag = (id, index, moveList) => {
   return {ref: ref, id: handlerId, opacity: opacity}
 }
 
-export function dropTarget(onDrop){
-    const [, drop] = useDrop({
-        accept: ItemTypes.CARD,
-        drop: onDrop,
-        collect: (monitor) => ({
-            isOver: monitor.isOver(),
-            canDrop: monitor.canDrop(),
-        }),
+export const dropTarget = (updateListCards, toIdx) => {
+  let [{isOverCurrent}, drop] = useDrop(
+    ()=>({
+      accept: ItemTypes.CARD,
+      drop(item) {
+        updateListCards(toIdx, item.id)
+      },
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        isOverCurrent: monitor.isOver({shallow: true})
+      })
     })
-    return drop
+  )
+
+  return {isOverCurrent: isOverCurrent, ref: drop}
 }

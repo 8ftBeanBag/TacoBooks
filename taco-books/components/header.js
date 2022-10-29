@@ -28,7 +28,7 @@ export default class extends React.Component {
                 <Divider color="white"/>
                 <Typography variant="h6" color="white">A <a>Trello</a>-<a>Google Books</a> hybrid</Typography>
 
-                <FormControl sx={{my: {xs: 1, md: '30px'}, color: 'white'}}>
+                {/* <FormControl sx={{my: {xs: 1, md: '30px'}, color: 'white'}}>
                     <NativeSelect
                         sx={{ backgroundColor: 'white', p: 1}}
                         defaultValue='favorites'
@@ -42,7 +42,7 @@ export default class extends React.Component {
                         <option value='purchased'>Purchased</option>
                         <option value='toread'>To Read</option>
                     </NativeSelect>
-                </FormControl>
+                </FormControl> */}
 
                 <Button sx={{color: 'secondary1.main', mt: 2, float: {xs: 'right', md: 'none'}, display: 'block'}} onClick={this.handleShowSearch}>Search Books</Button>
             </Box>

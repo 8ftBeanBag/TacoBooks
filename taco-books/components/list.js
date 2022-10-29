@@ -15,14 +15,16 @@ export default function BookList({deleteList, cards, title, id, index}){
     const [name, handleName] = useState(title)
     const addCard = useStore((state) => state.addCard)
     const deleteCard = useStore((state) => state.deleteCard)
+    const cardDropped = useStore((state) => state.cardDropped)
     
     // Drag data
     const moveList = useStore((state) => state.moveList)
     let dragData = verticalDrag(id, index, moveList);
-    
+    let dropData = dropTarget(cardDropped, index)
+
     return (
-        <Box ref={dragData.ref} >
-            <Card sx={{ width: {md: 350, xs: '100%'}, maxHeight: '100%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
+        <Box ref={dropData.ref}>
+            <Card ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}} sx={{ width: {md: 350, xs: '100%'}, maxHeight: '100%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
                 <CardHeader sx={{ backgroundColor: 'secondary1.main' }} title={
                     <Grid container
                         direction="row"
@@ -63,7 +65,13 @@ export default function BookList({deleteList, cards, title, id, index}){
                 <CardContent sx={{p: 1}}>
                     <Button sx={{ width: '100%'}} variant="contained" color="primary" onClick={()=>addCard(id)}><ControlPointIcon/></Button>
                     {cards.map((card, idx)=>
-                        <Book key={card.id} moveCard={()=>moveCard(id, card.id)} index={idx} id={card.id} initDescription={card.description} initTitle={card.title} deleteBook={()=>deleteCard(id, card.id)} listId={id}></Book>
+                        <Book key={card.id} 
+                              moveCard={()=>moveCard(id, card.id)}
+                              index={idx} id={card.id} 
+                              initDescription={card.description} 
+                              initTitle={card.title} 
+                              deleteBook={()=>deleteCard(id, card.id)} 
+                              listId={id}></Book>
                     )}
                 </CardContent>
             </Card>

@@ -17,8 +17,8 @@ export default function Book({initTitle, initDescription, deleteBook, index, id,
     let dragData = horizontalDrag(id, index, moveCard, listId);
 
     return (
-        <div ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}}>
-            <Card sx={{ width: '100%', maxHeight: '600px', overflowY: 'auto', my: 2}} variant="outlined">
+        <div>
+            <Card ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}} sx={{ width: '100%', maxHeight: '600px', overflowY: 'auto', my: 2}} variant="outlined">
                 <CardHeader sx={{ backgroundColor: "secondary2.main" }} title={
                     <Grid container
                         direction="row"
