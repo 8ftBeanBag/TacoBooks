@@ -23,7 +23,7 @@ export default class extends React.Component {
 
     render(){
         return ( 
-            <Box className='header-bar' sx={{ backgroundColor: 'primary.main', minHeight: {xs: 'auto', md:"100%"}, p: '10px', borderRight: {md: '1px solid white', sx:'none'}}}>
+            <Box className='header-bar' sx={{ backgroundColor: 'primary.main', minHeight: {xs: 'auto', md:"100%"}, p: '10px', borderRight: {md: '1px solid white', sx:'none'}, textAlign: 'center'}}>
                 <Typography sx={{fontSize: {xs: 40, md: 45, lg: 60}}} color="white">Taco Books 🌮</Typography>
                 <Divider color="white"/>
                 <Typography variant="h6" color="white">A <a>Trello</a>-<a>Google Books</a> hybrid</Typography>
@@ -44,7 +44,7 @@ export default class extends React.Component {
                     </NativeSelect>
                 </FormControl> */}
 
-                <Button sx={{color: 'secondary1.main', mt: 2, float: {xs: 'right', md: 'none'}, display: 'block'}} onClick={this.handleShowSearch}>Search Books</Button>
+                <Button sx={{color: 'secondary1.main', mt: 2, float: {xs: 'right', md: 'none'}, display: 'inline-block'}} onClick={this.handleShowSearch}>Search Books</Button>
             </Box>
         )
     }

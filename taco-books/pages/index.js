@@ -19,7 +19,6 @@ export default function Index() {
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   // state
   const [display, displaySearch] = useState(false)
-  const [alert, setAlert] = useState(true)
   const foundBooks = useStore((state) => state.foundBooks)
   const updateFound = useStore((state) => state.updateFound)
   const lists = useStore((state) => state.lists)
@@ -28,10 +27,6 @@ export default function Index() {
     <ThemeProvider theme={appTheme}>
       <DndProvider backend={HTML5Backend}>
         <Box sx={{minHeight: '100vh', backgroundColor: 'background.main', m: 0, overflowY: "auto"}}>
-          { alert ? 
-            <Alert onClose={() => setAlert(false)} variant='filled' severity="warning">Warning: I can't save yet. Your data will be lost on refresh or browser close.</Alert>
-          : null
-          }
           { matches ?
             <MainLayout 
               lists={lists} updateLists={(listId, cards)=>updateListCards(listId, cards)} 

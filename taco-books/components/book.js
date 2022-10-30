@@ -30,7 +30,7 @@ export default function Book({initTitle, initDescription, deleteBook, index, id,
                                 editTitle ? 
                                 <TextField value={bookTitle} onChange={(e)=>setTitle(e.target.value)} onKeyDown={(e)=>{
                                     if(e.key == "Enter"){
-                                        setEditTitle()
+                                        setEditTitle(false)
                                     }
                                 }}
                                 variant="standard" fullWidth></TextField>
@@ -60,9 +60,13 @@ export default function Book({initTitle, initDescription, deleteBook, index, id,
                         }
                     </Grid>
                 }/>
-                <CardContent sx={{overflowY: 'auto'}}>
+                <CardContent sx={{overflowY: 'auto', maxHeight: '300px'}}>
                     {editTitle ? 
-                        <TextField multiline value={description} fullWidth onChange={(e)=>setDescription(e.target.value)}></TextField>
+                        <TextField multiline value={description} fullWidth onChange={(e)=>setDescription(e.target.value)} onKeyDown={(e)=>{
+                            if(e.key == "Enter"){
+                                setEditTitle(false)
+                            }
+                        }}></TextField>
                         : description
                     }
                 </CardContent>

@@ -23,9 +23,9 @@ export default function BookList({deleteList, cards, title, id, index}){
     let dropData = dropTarget(cardDropped, index)
 
     return (
-        <Box ref={dropData.ref}>
-            <Card ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}} sx={{ width: {md: 350, xs: '100%'}, maxHeight: '100%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
-                <CardHeader sx={{ backgroundColor: 'secondary1.main' }} title={
+        <Box ref={dropData.ref} sx={{ height: "100%" }}>
+            <Card ref={dragData.ref} data-handler-id={dragData.id} style={{opacity: dragData.opacity}} sx={{ width: {md: 350, xs: '100%'}, maxHeight: '95%', overflowY: 'auto', mr: {md: '20px'}, mt: {xs: 2, md: 0}}} variant="outlined">
+                <CardHeader sx={{ backgroundColor: 'secondary1.main', color: 'secondary1.text' }} title={
                     <Grid container
                         direction="row"
                         justifyContent="space-between"
@@ -40,7 +40,7 @@ export default function BookList({deleteList, cards, title, id, index}){
                                 }}
                                 variant="standard" fullWidth></TextField>
                                 :
-                                <Typography variant="h5" noWrap sx={{ display: "inline-block"}}>{name}</Typography>
+                                <Typography variant="h5" noWrap sx={{ width: '100%', display: "inline-block"}}>{name}</Typography>
                             }
                         </Grid>
                         <Grid item xs={2}>
@@ -52,12 +52,12 @@ export default function BookList({deleteList, cards, title, id, index}){
                             size='small'
                             color='primary'
                             >
-                                <EditIcon />
+                                <EditIcon sx={{color: 'secondary1.text'}} />
                             </ToggleButton>
                         </Grid>
                         <Grid item xs={2}>
                             <IconButton aria-label="delete" color="primary" onClick={deleteList}>
-                                <DeleteIcon />
+                                <DeleteIcon sx={{color: 'secondary1.text'}} />
                             </IconButton>
                         </Grid>
                     </Grid>
@@ -71,7 +71,8 @@ export default function BookList({deleteList, cards, title, id, index}){
                               initDescription={card.description} 
                               initTitle={card.title} 
                               deleteBook={()=>deleteCard(id, card.id)} 
-                              listId={id}></Book>
+                              listId={id}
+                              noEdit={false}></Book>
                     )}
                 </CardContent>
             </Card>

@@ -29,7 +29,8 @@ export default function Search(){
                           index={idx} 
                           id={card.id} 
                           initDescription={card.description} 
-                          initTitle={card.title}></Book>
+                          initTitle={card.title}
+                          noEdit={true}></Book>
                 )}
             </Container>
             <style jsx>{`
