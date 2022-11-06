@@ -26,7 +26,8 @@ export default function Index() {
   return (
     <ThemeProvider theme={appTheme}>
       <DndProvider backend={HTML5Backend}>
-        <Box sx={{minHeight: '100vh', backgroundImage: "url(books.jpg)", backgroundPosition: 'center', backgroundSize: 'cover', m: 0, overflowY: "auto"}}>
+        <Box sx={{zIndex: "-1", backgroundImage: "linear-gradient(to left, #00000033 50%, #00000033 50%), url(books.jpg)", filter: "blur(2px)", position: "fixed", height: "100vh", width: "100vw", backgroundPosition: 'center', backgroundSize: 'cover'}}></Box>
+        <Box sx={{minHeight: '100vh', m: 0, overflowY: "auto"}}>
           { matches ?
             <MainLayout 
               lists={lists} updateLists={(listId, cards)=>updateListCards(listId, cards)} 
